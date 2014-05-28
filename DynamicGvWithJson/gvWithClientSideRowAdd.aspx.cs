@@ -20,15 +20,7 @@ namespace JqGrid
 
         private void BindOneRowToGrid()
         {
-            DataTable dt = new DataTable();
-            dt.Columns.Add("Id", typeof(int));
-            dt.Columns.Add("Name", typeof(string));
-            dt.Columns.Add("Address", typeof(string));
-            DataRow dr = dt.NewRow();
-            dr["Id"] = 1;
-            dr["Name"] = "";
-            dr["Address"] = "";
-            dt.Rows.Add(dr);
+            DataTable dt = defaultDataTable();
             gvDynamicRowAdd.DataSource = dt;
             gvDynamicRowAdd.DataBind();
         }
@@ -37,12 +29,6 @@ namespace JqGrid
         {
             if (e.Row.RowType == DataControlRowType.DataRow)
             {
-                DropDownList address = (DropDownList)e.Row.FindControl("ddlAddress");
-                address.Items.Add(new ListItem("-Select-", "0"));
-                address.Items.Add(new ListItem("-Kathmandu-", "1"));
-                address.Items.Add(new ListItem("-Lalitpur-", "2"));
-                address.Items.Add(new ListItem("-Bhaktapur-", "3"));
-
                 LinkButton lnkDelete = (LinkButton)e.Row.FindControl("lnkDelete");
                 lnkDelete.Attributes.Add("onclick", "return false;");
             }
@@ -50,22 +36,38 @@ namespace JqGrid
 
         protected void btn_CheckGrid_Click(object sender, EventArgs e)
         {
-            DataTable dt = new DataTable();
-            dt.Columns.Add("Id", typeof(int));
-            dt.Columns.Add("Name", typeof(string));
-            dt.Columns.Add("Address", typeof(string));
+            DataTable dt = null;
 
             foreach (GridViewRow Row in gvDynamicRowAdd.Rows)
             {
-                Label lblId =(Label) Row.FindControl("lblId");
-                TextBox txtName = (TextBox)Row.FindControl("txtName");
-                DropDownList ddlAddress = (DropDownList)Row.FindControl("ddlAddress");
-                DataRow dr= dt.NewRow();
-                dr["Id"] = lblId.Text;
-                dr["Name"] = txtName.Text;
-                dr["Address"] = ddlAddress.SelectedValue;
-                dt.Rows.Add(dr);
+                Label lblId = (Row.FindControl("lblId") as Label);
+                TextBox txt_numero = Row.FindControl("txt_number") as TextBox;
+                TextBox txt_ocupacion = Row.FindControl("txt_ocupacion") as TextBox;
+                dt = defaultDataTable(lblId.Text, txt_numero.Text, txt_ocupacion.Text);
             }
+        }
+
+
+        private static DataTable defaultDataTable(params String[] values)
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add("Id", typeof(int));
+            dt.Columns.Add("Numero", typeof(string));
+            dt.Columns.Add("Ocupacion", typeof(string));
+            DataRow dr = dt.NewRow();
+
+            if (values.Length > 0)
+            {dr["Id"] = values[0];
+                dr["Numero"] = values[1];
+                dr["Ocupacion"] = values[2];}
+            else
+            {dr["Id"] = 1;
+            dr["Numero"] = "";
+            dr["Ocupacion"] = "";
+            }
+                dt.Rows.Add(dr);
+
+            return dt;
         }
     }
 }

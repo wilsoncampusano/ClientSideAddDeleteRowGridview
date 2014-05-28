@@ -9,10 +9,10 @@ function AddNewRecord() {
         $('table#gvDynamicRowAdd tbody tr:last').find(':input[type=text]').focus();
         return;
     }
-    if ($.trim($('table#gvDynamicRowAdd tbody tr:last').find('select option:selected').val()) == "0") {
+    if ($.trim($('table#gvDynamicRowAdd tbody tr:last').find(':input[type=text]').val()) == "") {
         var LastRowPosition = $('table#gvDynamicRowAdd tbody tr:last').offset().top;
         $('#Popup').show().css("display", "block").animate({ top: LastRowPosition - 8 }, 500);
-        $('table#gvDynamicRowAdd tbody tr:last').find('select').focus();
+        $('table#gvDynamicRowAdd tbody tr:last').find(':input[type=text]').focus();
         return;
     }
     $('#Popup').show().css("display", "none");
@@ -36,7 +36,7 @@ $(document).ready(function () {
         var NumberOfrows = $('table#gvDynamicRowAdd tbody tr').length;
         //one is header and another is one row so minimum number of rows is 2
         if (NumberOfrows > 2) {
-            var Confirm = window.confirm("Are you sure you want to delete this record?")
+            var Confirm = window.confirm("Esta seguro que desea eliminar el registro?")
             if (Confirm) {
                 $(this).parents("tr").remove();
             }
